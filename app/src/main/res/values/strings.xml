@@ -3,12 +3,18 @@
     <string name="sheets">明細</string>
     <string name="title_activity_settings">Settings</string>
 
-    <!-- Strings related to Settings -->
 
-    <!-- Example General settings -->
+    <!-- General settings -->
     <string name="setting_exchange_rate">匯率:</string>
     <string name="setting_tax_rate">稅率:</string>
     <string name="setting_default_discount">預設折扣:</string>
+
+    <!-- Add item dialog -->
+    <string name="add_item_dialog_name">名稱:</string>
+    <string name="add_item_dialog_price">單價:</string>
+    <string name="add_item_dialog_amount">數量:</string>
+    <string name="add_item_dialog_tax_include">含稅</string>
+    <string name="add_item_dialog_tax_not_include">不含稅:</string>
 
 
 </resources>

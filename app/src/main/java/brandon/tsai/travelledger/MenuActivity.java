@@ -1,6 +1,7 @@
 package brandon.tsai.travelledger;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -10,19 +11,17 @@ import android.widget.TextView;
 
 public class MenuActivity extends AppCompatActivity {
 
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
     private static final String TAG="Menu";
     private Context context;
-    SwipeListAdapter tagListAdapter;
+    SheetListAdapter sheetListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
         context = this;
+
+
 
 
         ((Button) findViewById(R.id.button_back)).setOnClickListener(new View.OnClickListener() {
@@ -35,26 +34,25 @@ public class MenuActivity extends AppCompatActivity {
         ((TextView) findViewById(R.id.textView_setting)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent();
-//                intent.setClass(MenuActivity.this, ImportCSVActivity.class);
-//                startActivity(intent);
+                Intent intent = new Intent();
+                intent.setClass(MenuActivity.this, SettingActivity.class);
+                startActivity(intent);
             }
         });
 
 
-        //MenuListAdapter tagListAdapter = new MenuListAdapter(this, DB.getTags());
-        tagListAdapter = new SwipeListAdapter(this, DB.getSheets(), false);
-        ListView tagsList = (ListView) findViewById(R.id.listView_tags);
-        tagsList.setAdapter(tagListAdapter);
+        sheetListAdapter = new SheetListAdapter(this, DB.getSheets(), false);
+        ListView sheetList = (ListView) findViewById(R.id.listView_sheets);
+        sheetList.setAdapter(sheetListAdapter);
 
     }
 
     @Override
     protected void onResume(){
         super.onResume();
-        if (tagListAdapter != null) {
-            tagListAdapter.changeCursor(DB.getSheets());
-            tagListAdapter.notifyDataSetChanged();
+        if (sheetListAdapter != null) {
+            sheetListAdapter.changeCursor(DB.getSheets());
+            sheetListAdapter.notifyDataSetChanged();
         }
 
     }

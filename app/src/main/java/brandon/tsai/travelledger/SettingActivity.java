@@ -1,5 +1,6 @@
 package brandon.tsai.travelledger;
 
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -8,10 +9,20 @@ import android.widget.EditText;
 
 public class SettingActivity extends AppCompatActivity {
 
+    SharedPreferences sp;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
+
+        sp = getSharedPreferences("Setting", MODE_PRIVATE);
+        String exchange = sp.getString("exchange", "3.02");
+        String tax = sp.getString("tax", "8");
+        String discount = sp.getString("discount", "7");
+        ((EditText) findViewById(R.id.editText_exchange_rate)).setText(exchange);
+        ((EditText) findViewById(R.id.editText_tax_rate)).setText(tax);
+        ((EditText) findViewById(R.id.editText_default_discount)).setText(discount);
 
         Button back = (Button) findViewById(R.id.button_back);
         back.setOnClickListener(new View.OnClickListener() {
@@ -28,6 +39,12 @@ public class SettingActivity extends AppCompatActivity {
                 String exchange = ((EditText) findViewById(R.id.editText_exchange_rate)).getText().toString();
                 String tax = ((EditText) findViewById(R.id.editText_tax_rate)).getText().toString();
                 String discount = ((EditText) findViewById(R.id.editText_default_discount)).getText().toString();
+
+                SharedPreferences.Editor spEditor = sp.edit();
+                spEditor.putString("exchange", exchange);
+                spEditor.putString("tax", tax);
+                spEditor.putString("discount", discount);
+                spEditor.commit();
 
                 finish();
             }

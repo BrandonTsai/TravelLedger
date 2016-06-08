@@ -46,12 +46,8 @@ public class DB {
             db.execSQL("CREATE TABLE IF NOT EXISTS items ("
                     + "_id INTEGER PRIMARY KEY autoincrement,"
                     + "name TEXT,"
-                    + "price INTEGER,"
-                    + "count INTEGER,"
-                    + "sid INTEGER"
-                    + ");");
-            db.execSQL("CREATE TABLE IF NOT EXISTS discounts ("
-                    + "_id INTEGER PRIMARY KEY autoincrement,"
+                    + "price TEXT,"
+                    + "amount INTEGER,"
                     + "discount INTEGER,"
                     + "sid INTEGER"
                     + ");");
@@ -61,12 +57,13 @@ public class DB {
         }
     }
 
+    // ---------------- Sheets ----------------------
 
     public static int addSheets(String name, String date, boolean cashflag) {
         ContentValues cv = new ContentValues(3);
         cv.put("name", name);
         cv.put("date", date);
-        int cash = (cashflag)? 1 : 0;
+        int cash = Utils.booleanToInt(cashflag);
         cv.put("cash", cash);
         long noteId = db.insert("sheets", null, cv);
         Log.d(TAG, "New sheet: " + date + "-" + name);
@@ -85,9 +82,9 @@ public class DB {
         db.update("sheets", cv, "_id=" + tagId, null);
     }
 
-    public static void updateSheetCash(int tagId, boolean cashflag) {
+    public static void updateSheet(int tagId, String name, String date, boolean cashflag) {
         ContentValues cv=new ContentValues(1);
-        int cash = (cashflag)? 1: 0;
+        int cash = Utils.booleanToInt(cashflag);
         cv.put("cash", cash);
         db.update("sheets", cv, "_id=" + tagId, null);
     }
@@ -95,6 +92,88 @@ public class DB {
     public static void deleteSheet(int id) {
         db.delete("sheets", "_id='" + id + "'", null);
     }
+
+
+    // ---------------- Items ----------------------
+
+
+    public static int addItems(String name, String price, int amount, int sid) {
+        ContentValues cv = new ContentValues(5);
+        cv.put("name", name);
+        cv.put("price", price);
+        cv.put("amount", amount);
+        cv.put("discount", 0);
+        cv.put("sid", sid);
+        long id = db.insert("items", null, cv);
+        Log.d(TAG, "New items: " + name + "-" + price);
+        return (int) id;
+    }
+
+
+
+    public static Cursor getItems(int sid) {
+        Cursor cursor = db.query("items", new String[]{"_id", "name", "price", "amount", "discount", "sid"}, "sid='"+ sid+"'" ,
+                null, null, null, null);
+        return cursor;
+    }
+
+    public static void updateItem(int id, String name, String price, int amount) {
+        ContentValues cv=new ContentValues(3);
+        cv.put("name", name);
+        cv.put("price", price);
+        cv.put("amount", amount);
+        db.update("items", cv, "_id=" + id, null);
+    }
+
+    public static void deleteItem(int id) {
+        db.delete("items", "_id='" + id + "'", null);
+    }
+
+
+    public static int addDiscount(int discount, int sid) {
+        ContentValues cv = new ContentValues(5);
+        cv.put("name", "Discount");
+        cv.put("price", 0);
+        cv.put("amount", 0);
+        cv.put("discount", discount);
+        cv.put("sid", sid);
+        long id = db.insert("items", null, cv);
+        Log.d(TAG, "New Discount: " + discount);
+        return (int) id;
+    }
+
+    public static void updateDiscount(int id, int discount) {
+        ContentValues cv=new ContentValues(1);
+        cv.put("discount", discount);
+        db.update("items", cv, "_id=" + id, null);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //
 //
 //    public static void updateNote(int noteId, String name, String transport, String note, String link, String location, String type) {

@@ -19,10 +19,10 @@ import com.daimajia.swipe.adapters.CursorSwipeAdapter;
  * Created by ty on 2016/5/25.
  * refer https://github.com/daimajia/AndroidSwipeLayout
  */
-public class SwipeListAdapter extends CursorSwipeAdapter {
+public class SheetListAdapter extends CursorSwipeAdapter {
     private static final String TAG="SwipeAdapter";
 
-    protected SwipeListAdapter(Context context, Cursor c, boolean autoRequery) {
+    protected SheetListAdapter(Context context, Cursor c, boolean autoRequery) {
         super(context, c, autoRequery);
     }
 
