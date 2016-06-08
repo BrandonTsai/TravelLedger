@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="brandon.tsai.travelledger.SettingActivity">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@android:color/background_light"
+        android:layout_gravity="center_vertical"
+        android:layout_marginBottom="2dp">
+
+        <Button
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:id="@+id/button_back"
+            android:background="@drawable/left1"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="5dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Setting"
+            android:id="@+id/textView3"
+            android:textColor="#1da865"
+            android:textSize="26dp"
+            android:textStyle="bold|normal|italic"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:layout_weight="1" />
+
+        <Button
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:id="@+id/button_save_setting"
+            android:background="@drawable/save"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="5dp" />
+
+    </LinearLayout>
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/background_light"
+        android:padding="10dp">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/setting_exchange_rate"
+                android:id="@+id/textView11"
+                android:layout_marginRight="5dp"
+                android:textSize="20dp"
+                android:textColor="@android:color/black" />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:ems="10"
+                android:id="@+id/editText_exchange_rate"
+                android:layout_marginRight="5dp"
+                android:text="3.0"
+                android:layout_weight="1" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView112"
+                android:textSize="12dp"
+                android:textColor="@android:color/darker_gray"
+                android:text="TWD->JPD" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/setting_tax_rate"
+                android:id="@+id/textView22"
+                android:layout_marginRight="5dp"
+                android:textSize="20dp"
+                android:textColor="@android:color/black" />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:ems="10"
+                android:id="@+id/editText_tax_rate"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:text="8" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView222"
+                android:textSize="20dp"
+                android:textColor="@android:color/darker_gray"
+                android:text="%" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/setting_default_discount"
+                android:id="@+id/textView33"
+                android:layout_marginRight="5dp"
+                android:textSize="20dp"
+                android:textColor="@android:color/black" />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:ems="10"
+                android:id="@+id/editText_default_discount"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:text="7" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView333"
+                android:textSize="20dp"
+                android:textColor="@android:color/darker_gray"
+                android:text="%" />
+
+        </TableRow>
+    </TableLayout>
+
+
+</LinearLayout>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+    <com.daimajia.swipe.SwipeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:background="@android:color/white"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:id="@+id/SwipeLayout">
+        <LinearLayout
+            android:background="@color/switch_thumb_normal_material_dark"
+            android:id="@+id/bottom_wrapper"
+            android:layout_width="160dp"
+            android:weightSum="1"
+            android:orientation="horizontal"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:gravity="right"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:id="@+id/ImageView_delete_sheet"
+                android:layout_gravity="center"
+                android:src="@android:drawable/ic_menu_delete"
+                android:layout_weight="1" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:id="@+id/ImageView_rename_sheet"
+                android:layout_gravity="center"
+                android:src="@android:drawable/ic_menu_edit"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+
+        <!-- Surface View Start -->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:paddingLeft="10dp"
+            android:paddingTop="3dp"
+            android:paddingBottom="3dp"
+            android:id="@+id/LinearLayout_sheet_item"
+            android:clickable="true">
+            <!--What you want to show in SurfaceView-->
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView_sheet_name"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
+                android:textSize="22dp"
+                android:background="@android:color/white"
+                android:clickable="true"
+                android:textColor="@android:color/black"
+                android:visibility="visible"
+                android:paddingTop="7dp"
+                android:paddingBottom="10dp"
+                android:paddingLeft="8dp" />
+        </LinearLayout>
+    </com.daimajia.swipe.SwipeLayout>

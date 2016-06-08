@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">TravelLedger</string>
+    <string name="sheets">明細</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Strings related to Settings -->
+
+    <!-- Example General settings -->
+    <string name="setting_exchange_rate">匯率:</string>
+    <string name="setting_tax_rate">稅率:</string>
+    <string name="setting_default_discount">預設折扣:</string>
+
+
+</resources>
