@@ -21,13 +21,19 @@ import com.daimajia.swipe.adapters.CursorSwipeAdapter;
  * refer https://github.com/daimajia/AndroidSwipeLayout
  */
 public class ItemListAdapter extends CursorSwipeAdapter {
-    private static final String TAG="SwipeAdapter";
+    private static final String TAG="(TL)SwipeAdapter";
 
     private int sheetId;
+    public interface AdapterCallback {
+        void onDatasetChanged();
+    }
 
-    protected ItemListAdapter(Context context, Cursor c, int sheedId, boolean autoRequery) {
+    private AdapterCallback callerActivity;
+
+    protected ItemListAdapter(Context context, Cursor c, int sheedId, boolean autoRequery, SheetActivity activity) {
         super(context, c, autoRequery);
         this.sheetId = sheedId;
+        callerActivity = activity;
     }
 
     @Override
@@ -69,6 +75,8 @@ public class ItemListAdapter extends CursorSwipeAdapter {
                 Cursor newCursor = DB.getItems(sheetId);
                 changeCursor(newCursor);
                 notifyDataSetChanged();
+                callerActivity.onDatasetChanged();
+                closeAllItems();
             }
         });
 
@@ -110,6 +118,8 @@ public class ItemListAdapter extends CursorSwipeAdapter {
                                     DB.updateItem(itemId, name, taxedPrice.toString(), amount);
                                     changeCursor(DB.getItems(sheetId));
                                     notifyDataSetChanged();
+                                    callerActivity.onDatasetChanged();
+                                    closeAllItems();
                                     dialog.dismiss();
                                 }
                             })
@@ -134,6 +144,8 @@ public class ItemListAdapter extends CursorSwipeAdapter {
                                     DB.updateDiscount(itemId, newDiscount);
                                     changeCursor(DB.getItems(sheetId));
                                     notifyDataSetChanged();
+                                    callerActivity.onDatasetChanged();
+                                    closeAllItems();
                                     dialog.dismiss();
                                 }
                             })
@@ -155,5 +167,8 @@ public class ItemListAdapter extends CursorSwipeAdapter {
 
     @Override
     public void closeAllItems() {
+        for (int i = 0; i < DB.getItems(sheetId).getCount(); i++){
+            closeItem(i);
+        }
     }
 }
