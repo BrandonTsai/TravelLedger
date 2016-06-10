@@ -8,6 +8,7 @@
     <string name="setting_exchange_rate">匯率:</string>
     <string name="setting_tax_rate">稅率:</string>
     <string name="setting_default_discount">預設折扣:</string>
+    <string name="setting_default_tips">預設小費:</string>
 
     <!-- Add item dialog -->
     <string name="add_item_dialog_name">名稱:</string>

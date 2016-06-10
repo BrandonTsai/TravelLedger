@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -45,23 +46,38 @@ public class ItemListAdapter extends CursorSwipeAdapter {
     public void bindView(View view, final Context context, Cursor cursor) {
 
         TextView nameView = (TextView) view.findViewById(R.id.textView_item_name);
+        nameView.setTextColor(Color.DKGRAY);
         TextView priceView = (TextView) view.findViewById(R.id.textView_item_price);
         final int itemId = cursor.getInt(0);
         final String itemName = cursor.getString(1);
         final String price = cursor.getString(2);
         final Integer amount = cursor.getInt(3);
-        final Integer discount = cursor.getInt(4);
+        final Integer rate = cursor.getInt(4);
 
 
-        if (itemName != null && !itemName.isEmpty()) {
+        if (itemName != null) {
+            Log.d(TAG, "amount:" + amount);
             nameView.setText(itemName);
+            TextView amountView = (TextView) view.findViewById(R.id.textView_item_amount);
+            if (amount > 1) {
+                amountView.setText(" (" + amount + ") ");
+            } else {
+                amountView.setText("");
+            }
+            if (itemName.equals(Consts.TAX_FREE) || itemName.equals(Consts.DISCOUNT)){
+                nameView.setTextColor(Color.parseColor("#F2A75C"));
+            } else if (itemName.equals(Consts.TIPS)) {
+                nameView.setTextColor(Color.RED);
+            }
         }
 
-        if (discount == 0) {
+        if (rate == 0) {
             Double totalPrice = Double.valueOf(String.format("%.2f", Double.valueOf(price) * amount));
             priceView.setText(totalPrice.toString());
+        } else if (itemName.equals(Consts.TIPS)){
+            priceView.setText("+ " + rate + " %");
         } else {
-            priceView.setText("- " + discount + " %");
+            priceView.setText("- " + rate + " %");
         }
 
         Log.d(TAG, "item:(" +itemId + ")" + itemName + "-" + priceView.getText().toString());
@@ -86,7 +102,7 @@ public class ItemListAdapter extends CursorSwipeAdapter {
         editItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (discount == 0) {
+                if (rate == 0) {
                     LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                     final View layout = inflater.inflate(R.layout.add_item_dialog, null);
                     EditText nameText = (EditText) layout.findViewById(R.id.editText_add_dialog_name);
@@ -131,15 +147,15 @@ public class ItemListAdapter extends CursorSwipeAdapter {
                 } else {
                     LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                     final View layout = inflater.inflate(R.layout.add_discount_dialog, null);
-                    EditText discountText = (EditText) layout.findViewById(R.id.editText_add_discount);
-                    discountText.setText(discount.toString());
+                    EditText discountText = (EditText) layout.findViewById(R.id.editText_add_discount_value);
+                    discountText.setText(rate.toString());
 
 
                     new AlertDialog.Builder(context).setTitle("Update Discount").setView(layout)
                             .setPositiveButton("Save", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    Integer newDiscount = Integer.valueOf(((EditText) layout.findViewById(R.id.editText_add_discount)).getText().toString());
+                                    Integer newDiscount = Integer.valueOf(((EditText) layout.findViewById(R.id.editText_add_discount_value)).getText().toString());
                                     DB.updateDiscount(itemId, newDiscount);
                                     changeCursor(DB.getItems(sheetId));
                                     notifyDataSetChanged();

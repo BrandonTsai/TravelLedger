@@ -41,6 +41,7 @@ public class DB {
                     + "_id INTEGER PRIMARY KEY autoincrement,"
                     + "name TEXT,"
                     + "date TEXT,"
+                    + "type TEXT,"
                     + "cash INTEGER"
                     + ");");
             db.execSQL("CREATE TABLE IF NOT EXISTS items ("
@@ -48,7 +49,7 @@ public class DB {
                     + "name TEXT,"
                     + "price TEXT,"
                     + "amount INTEGER,"
-                    + "discount INTEGER,"
+                    + "rate INTEGER,"
                     + "sid INTEGER"
                     + ");");
         } catch (Exception e) {
@@ -98,11 +99,12 @@ public class DB {
 
 
     public static int addItems(String name, String price, int amount, int sid) {
+        Log.d(TAG, "add item:" + name);
         ContentValues cv = new ContentValues(5);
         cv.put("name", name);
         cv.put("price", price);
         cv.put("amount", amount);
-        cv.put("discount", 0);
+        cv.put("rate", 0);
         cv.put("sid", sid);
         long id = db.insert("items", null, cv);
         Log.d(TAG, "New items: " + name + "-" + price);
@@ -112,7 +114,7 @@ public class DB {
 
 
     public static Cursor getItems(int sid) {
-        Cursor cursor = db.query("items", new String[]{"_id", "name", "price", "amount", "discount", "sid"}, "sid='" + sid + "'",
+        Cursor cursor = db.query("items", new String[]{"_id", "name", "price", "amount", "rate", "sid"}, "sid='" + sid + "'",
                 null, null, null, null);
         return cursor;
     }
@@ -133,14 +135,21 @@ public class DB {
         db.delete("items", "sid='" + sid + "'", null);
     }
 
+    public static boolean hasTaxFreeItem(int sid) {
+        Cursor cursor = db.query("items", new String[]{"_id", "name", "rate", "sid"}, "sid='" + sid + "' AND name='"+ Consts.TAX_FREE+"'",
+                null, null, null, null);
+        if (cursor.getCount() > 0) {
+            return true;
+        }
+        return false;
+    }
 
-
-    public static int addDiscount(int discount, int sid) {
+    public static int addDiscount(String name, int discount, int sid) {
         ContentValues cv = new ContentValues(5);
-        cv.put("name", "Discount");
+        cv.put("name", name);
         cv.put("price", 0);
         cv.put("amount", 0);
-        cv.put("discount", discount);
+        cv.put("rate", discount);
         cv.put("sid", sid);
         long id = db.insert("items", null, cv);
         Log.d(TAG, "New Discount: " + discount);
@@ -149,7 +158,7 @@ public class DB {
 
     public static void updateDiscount(int id, int discount) {
         ContentValues cv=new ContentValues(1);
-        cv.put("discount", discount);
+        cv.put("rate", discount);
         db.update("items", cv, "_id=" + id, null);
     }
 

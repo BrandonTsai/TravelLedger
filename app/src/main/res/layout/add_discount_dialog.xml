@@ -14,16 +14,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="5dp">
+        android:padding="5dp"
+        android:focusable="false">
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/editText_add_discount"
+            android:id="@+id/editText_add_discount_value"
             android:textSize="16dp"
             android:paddingLeft="8dp"
             android:inputType="number"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:selectAllOnFocus="true"
+            android:singleLine="true" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -31,7 +36,8 @@
             android:text="% Off"
             android:id="@+id/textView5"
             android:textSize="16dp"
-            android:textColor="@android:color/black" />
+            android:textColor="@android:color/black"
+            android:autoText="false" />
     </LinearLayout>
 
 
