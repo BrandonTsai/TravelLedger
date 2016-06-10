@@ -16,8 +16,8 @@
         <Button
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:id="@+id/button_back"
-            android:background="@drawable/left1"
+            android:id="@+id/button_menu"
+            android:background="@drawable/menu96"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="5dp" />
 
@@ -39,7 +39,7 @@
         <Button
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:id="@+id/button_save_setting"
+            android:id="@+id/button_save_sheet"
             android:background="@drawable/save"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="5dp" />
@@ -151,11 +151,10 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:id="@+id/image_taxfree"
-            android:layout_weight="1"
+            android:id="@+id/image_add_tips"
             android:layout_marginLeft="5dp"
-            android:src="@drawable/taxfree50"
-            android:clickable="true" />
+            android:clickable="true"
+            android:src="@drawable/tips" />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -167,18 +166,8 @@
             android:src="@drawable/camera48"
             android:clickable="true" />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:id="@+id/image_exchange"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:src="@drawable/exchange48"
-            android:clickable="true" />
-
     </LinearLayout>
+
 
     <ListView
         android:layout_width="match_parent"

@@ -112,7 +112,7 @@ public class DB {
 
 
     public static Cursor getItems(int sid) {
-        Cursor cursor = db.query("items", new String[]{"_id", "name", "price", "amount", "discount", "sid"}, "sid='"+ sid+"'" ,
+        Cursor cursor = db.query("items", new String[]{"_id", "name", "price", "amount", "discount", "sid"}, "sid='" + sid + "'",
                 null, null, null, null);
         return cursor;
     }
@@ -128,6 +128,11 @@ public class DB {
     public static void deleteItem(int id) {
         db.delete("items", "_id='" + id + "'", null);
     }
+
+    public static void deleteItemsWithSheetID(int sid) {
+        db.delete("items", "sid='" + sid + "'", null);
+    }
+
 
 
     public static int addDiscount(int discount, int sid) {

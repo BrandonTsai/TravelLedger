@@ -10,24 +10,30 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
 public class SheetActivity extends AppCompatActivity implements ItemListAdapter.AdapterCallback {
 
-    private static final String TAG="(TL)SheetActivity";
+    private static final String TAG = "(TL)SheetActivity";
 
     private Integer sid;
     ItemListAdapter itemListAdapter;
     boolean taxFreeMode = false;
     private Cursor cursor;
 
-    private int TAX;
+    private int TAX, TIPS_RATE;
     private Double EXCHANGE_RATE;
+
+    LinearLayout taxfreeLayout;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,15 +46,33 @@ public class SheetActivity extends AppCompatActivity implements ItemListAdapter.
         SharedPreferences sp = getSharedPreferences("Setting", MODE_PRIVATE);
         TAX = Integer.valueOf(sp.getString("tax", "8"));
         EXCHANGE_RATE = Double.valueOf(sp.getString("exchange", "3.0"));
+        TIPS_RATE = Integer.valueOf(sp.getString("tips", "10"));
+
 
         Intent it = getIntent();
         sid = it.getIntExtra("sheetId", 0);
-        if (sid.equals(0)){
-            sid = DB.addSheets("New", Utils.getCurrentDate() ,true);
+        if (sid.equals(0)) {
+            sid = DB.addSheets("New", Utils.getCurrentDate(), true);
             initNewSheet();
         }
 
+        Button saveBtn = (Button) findViewById(R.id.button_save_sheet);
+        saveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                save();
+            }
+        });
 
+        Button menuBtn = (Button) findViewById(R.id.button_menu);
+        menuBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent it = new Intent();
+                it.setClass(SheetActivity.this, MenuActivity.class);
+                startActivity(it);
+            }
+        });
 
     }
 
@@ -135,17 +159,29 @@ public class SheetActivity extends AppCompatActivity implements ItemListAdapter.
 //        });
     }
 
-    private void changeTaxfreeMode(boolean flag){
-        taxFreeMode = flag;
-        ImageView taxfreeBtn = (ImageView) findViewById(R.id.image_taxfree);
-        if (taxFreeMode) {
-            taxfreeBtn.setImageResource(R.drawable.taxfree50_light);
-        } else {
-            taxfreeBtn.setImageResource(R.drawable.taxfree50);
+
+    private void changeTaxfreeMode(boolean flag) {
+        ListView itemList = (ListView) findViewById(R.id.listView_items);
+        if (taxfreeLayout == null) {
+            LayoutInflater inflater = LayoutInflater.from(this);
+            taxfreeLayout = (LinearLayout) inflater.inflate(R.layout.item_list_taxfree_item, (ViewGroup) itemList.getParent(), false);
+            TextView taxfreeText = (TextView) taxfreeLayout.findViewById(R.id.textView_taxfree_value);
+            taxfreeText.setText("- " + TAX + " %");
         }
+
+        taxFreeMode = flag;
+        if (taxFreeMode) {
+            Log.d(TAG, "add taxfree item");
+            itemList.removeHeaderView(taxfreeLayout);
+            itemList.addHeaderView(taxfreeLayout);
+        } else {
+            Log.d(TAG, "remove taxfree item");
+            itemList.removeHeaderView(taxfreeLayout);
+        }
+
     }
 
-    public void updateTotalCost(){
+    public void updateTotalCost() {
         cursor = DB.getItems(sid);
 
         int totalDiscount = 0;
@@ -166,14 +202,13 @@ public class SheetActivity extends AppCompatActivity implements ItemListAdapter.
         if (totalCost < 5000) {
             Log.d(TAG, "No Tax Free!");
             changeTaxfreeMode(false);
-        }
-        else {
+        } else {
             Log.d(TAG, "Tax Free!");
             changeTaxfreeMode(true);
             totalDiscount += TAX;
         }
 
-        double finalJPD = totalCost * ((double) (100 - totalDiscount) / (double) 100);
+        double finalJPD = Double.valueOf(String.format("%.2f", totalCost * ((double) (100 - totalDiscount) / (double) 100)));
         double finalTWD = Double.valueOf(String.format("%.2f", (double) finalJPD / EXCHANGE_RATE));
 
         Log.d(TAG, "TotalCost:" + totalCost + "; TotalDiscount" + totalDiscount + "; JPD:" + finalJPD + "; TWD:" + finalTWD);
@@ -184,7 +219,7 @@ public class SheetActivity extends AppCompatActivity implements ItemListAdapter.
 
     }
 
-    private void updateItemList(){
+    private void updateItemList() {
         if (itemListAdapter != null && sid != 0) {
             cursor = DB.getItems(sid);
             itemListAdapter.changeCursor(cursor);
@@ -194,10 +229,40 @@ public class SheetActivity extends AppCompatActivity implements ItemListAdapter.
         }
     }
 
+    private void save() {
+        new AlertDialog.Builder(this).setTitle("Save")
+                .setIcon(R.drawable.save)
+                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent it = new Intent(); // Your list's Intent
+                        it.setClass(SheetActivity.this, SheetActivity.class);
+                        it.setFlags(it.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY); // Adds the FLAG_ACTIVITY_NO_HISTORY flag
+                        startActivity(it);
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    private void cancel() {
+        DB.deleteItemsWithSheetID(sid);
+        //DB.deleteImage(sid);
+        DB.deleteSheet(sid);
+        finish();
+    }
+
     @Override
-    protected void onResume(){
+    protected void onResume() {
         super.onResume();
         updateItemList();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        cancel();
     }
 
     @Override
@@ -205,4 +270,5 @@ public class SheetActivity extends AppCompatActivity implements ItemListAdapter.
         Log.d(TAG, "onDatasetChanged");
         updateTotalCost();
     }
+
 }

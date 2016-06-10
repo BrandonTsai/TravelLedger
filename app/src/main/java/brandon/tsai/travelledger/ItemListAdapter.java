@@ -58,7 +58,7 @@ public class ItemListAdapter extends CursorSwipeAdapter {
         }
 
         if (discount == 0) {
-            Double totalPrice = Double.valueOf(price) * amount;
+            Double totalPrice = Double.valueOf(String.format("%.2f", Double.valueOf(price) * amount));
             priceView.setText(totalPrice.toString());
         } else {
             priceView.setText("- " + discount + " %");
@@ -114,7 +114,6 @@ public class ItemListAdapter extends CursorSwipeAdapter {
                                         taxedPrice = taxedPrice * (1 + (double) tax / (double) 100);
                                         Log.d(TAG, "add tax:" + price + "->" + taxedPrice);
                                     }
-
                                     DB.updateItem(itemId, name, taxedPrice.toString(), amount);
                                     changeCursor(DB.getItems(sheetId));
                                     notifyDataSetChanged();
