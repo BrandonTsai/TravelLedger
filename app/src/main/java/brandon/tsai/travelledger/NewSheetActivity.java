@@ -20,10 +20,11 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class SheetActivity extends AppCompatActivity implements ItemListAdapter.AdapterCallback {
+public class NewSheetActivity extends AppCompatActivity implements ItemListAdapter.AdapterCallback {
 
-    private static final String TAG = "(TL)SheetActivity";
+    private static final String TAG = "(TL)NewSheet";
 
+    private boolean newSheet = false;
     private Integer sid;
     ItemListAdapter itemListAdapter;
 
@@ -31,53 +32,149 @@ public class SheetActivity extends AppCompatActivity implements ItemListAdapter.
 
     private Integer TAX, TIPS_RATE, DISCOUNT_RATE;
     private Double EXCHANGE_RATE;
-
+    String sheetName, sheetDate, sheetPrice, sheetType;
+    Boolean sheetCash = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sheet);
-
+        setContentView(R.layout.activity_new_sheet);
 
         DB.initDatabase(this);
-        //getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        getSettings();
 
+        Intent it = getIntent();
+        sid = it.getIntExtra("sheetId", 0);
+        if (sid == 0) {
+            newSheet = true;
+            sid = DB.addSheets("New", Utils.getCurrentDate(), "0.0", "Food", true);
+        } else {
+
+        }
+        getSheetInfo();
+
+        TextView sheetNameView = (TextView) findViewById(R.id.textView_sheet_name);
+        sheetNameView.setText(sheetName);
+
+        initSheetItems();
+
+        Button saveBtn = (Button) findViewById(R.id.button_go_save_sheet);
+        saveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                LayoutInflater inflater = getLayoutInflater();
+                final View layout = inflater.inflate(R.layout.save_sheet_dialog, null);
+
+                final EditText sheetNameView = (EditText) layout.findViewById(R.id.editText_sheet_name);
+                sheetNameView.setText(sheetName);
+
+                TextView sheetPriceView = (TextView) layout.findViewById(R.id.textView_sheet_price);
+                sheetPriceView.setText(sheetPrice);
+
+                TextView sheetDateView = (TextView) layout.findViewById(R.id.textView_sheet_date);
+                sheetDateView.setText(sheetDate);
+
+                RadioGroup rgType = (RadioGroup)layout.findViewById(R.id.radiogroup_sheet_type);
+                rgType.check(Consts.SHEET_TYPE_REVERT.get(sheetType));
+
+                RadioGroup rgPayment = (RadioGroup)layout.findViewById(R.id.radiogroup_sheet_payment);
+                if (!sheetCash) {
+                    rgPayment.check(R.id.radioButton_sheet_pay_creditcard);
+                }
+
+                final AlertDialog saveSheetDialog = new AlertDialog.Builder(NewSheetActivity.this).setTitle("Save").setView(layout)
+                        .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                sheetName = ((EditText) layout.findViewById(R.id.editText_sheet_name)).getText().toString();
+                                sheetDate = ((TextView) layout.findViewById(R.id.textView_sheet_date)).getText().toString();
+
+                                RadioGroup rgType = (RadioGroup) layout.findViewById(R.id.radiogroup_sheet_type);
+                                sheetType = Consts.SHEET_TYPE.get(rgType.getCheckedRadioButtonId());
+
+                                RadioGroup rgPayment = (RadioGroup) layout.findViewById(R.id.radiogroup_sheet_payment);
+                                if (rgPayment.getCheckedRadioButtonId() == R.id.radioButton_sheet_pay_cash) {
+                                    sheetCash = true;
+                                } else {
+                                    sheetCash = false;
+                                }
+
+                                Log.d(TAG, "updateSheet " + sid + "," + sheetName);
+                                DB.updateSheet(sid, sheetName, sheetDate, String.valueOf(sheetPrice), sheetType, sheetCash);
+
+                                Intent it = new Intent();
+                                it.setClass(NewSheetActivity.this, MenuActivity.class);
+                                it.setFlags(it.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
+                                startActivity(it);
+                            }
+                        })
+                        .setNegativeButton("Cancel", null)
+                        .create();
+                if (newSheet) {
+                    saveSheetDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                        @Override
+                        public void onShow(DialogInterface dialog) {
+                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.showSoftInput(sheetNameView, InputMethodManager.SHOW_IMPLICIT);
+                        }
+                    });
+                }
+                saveSheetDialog.show();
+
+
+            }
+        });
+
+        Button cancelBtn = (Button) findViewById(R.id.button_cancel);
+        Button backBtn = (Button) findViewById(R.id.button_sheet_back);
+
+        if (newSheet) {
+            cancelBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    deleteSheet();
+                    Intent it = new Intent();
+                    it.setClass(NewSheetActivity.this, MenuActivity.class);
+                    it.setFlags(it.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
+                    startActivity(it);
+                }
+            });
+            backBtn.setVisibility(View.GONE);
+        } else {
+            cancelBtn.setVisibility(View.GONE);
+            backBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+//                    finish();
+                    Intent it = new Intent();
+                    it.setClass(NewSheetActivity.this, MenuActivity.class);
+                    it.setFlags(it.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
+                    startActivity(it);
+                }
+            });
+        }
+
+    }
+
+    private void getSheetInfo() {
+        Cursor cursor = DB.getSheetById(sid);
+        sheetName = cursor.getString(0);
+        sheetDate = cursor.getString(1);
+        sheetPrice = cursor.getString(2);
+        sheetType = cursor.getString(3);
+        sheetCash = Utils.intToBoolean(cursor.getInt(4));
+    }
+
+    private void getSettings(){
         SharedPreferences sp = getSharedPreferences("Setting", MODE_PRIVATE);
-
         TAX = Integer.valueOf(sp.getString("tax", "8"));
         EXCHANGE_RATE = Double.valueOf(sp.getString("exchange", "3.0"));
         DISCOUNT_RATE = Integer.valueOf(sp.getString("discount", "10"));
         TIPS_RATE = Integer.valueOf(sp.getString("tips", "10"));
-
-
-        Intent it = getIntent();
-        sid = it.getIntExtra("sheetId", 0);
-        if (sid.equals(0)) {
-            sid = DB.addSheets("New", Utils.getCurrentDate(), true);
-            initNewSheet();
-        }
-
-        Button saveBtn = (Button) findViewById(R.id.button_save_sheet);
-        saveBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                save();
-            }
-        });
-
-        Button menuBtn = (Button) findViewById(R.id.button_menu);
-        menuBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent it = new Intent();
-                it.setClass(SheetActivity.this, MenuActivity.class);
-                startActivity(it);
-            }
-        });
-
     }
 
-    private void initNewSheet() {
+    private void initSheetItems() {
 
         ListView itemList = (ListView) findViewById(R.id.listView_items);
         cursor = DB.getItems(sid);
@@ -92,7 +189,7 @@ public class SheetActivity extends AppCompatActivity implements ItemListAdapter.
                 final View layout = inflater.inflate(R.layout.add_item_dialog, null);
                 RadioGroup rg = (RadioGroup) layout.findViewById(R.id.radioGroup);
                 rg.check(R.id.radioButton_include_tax);
-                final AlertDialog addItemDialog = new AlertDialog.Builder(SheetActivity.this).setTitle("Add Item").setView(layout)
+                final AlertDialog addItemDialog = new AlertDialog.Builder(NewSheetActivity.this).setTitle("Add Item").setView(layout)
                         .setPositiveButton("Save", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -116,10 +213,9 @@ public class SheetActivity extends AppCompatActivity implements ItemListAdapter.
                             int amount = Integer.valueOf(((EditText) layout.findViewById(R.id.editText_add_dialog_amount)).getText().toString());
                             DB.addItems(newItemName, taxedPrice.toString(), amount, sid);
                             updateItemList();
-                            //getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
                             addItemDialog.dismiss();
                         } else {
-                            Toast.makeText(SheetActivity.this, "price must > 0", Toast.LENGTH_LONG).show();
+                            Toast.makeText(NewSheetActivity.this, "price must > 0", Toast.LENGTH_LONG).show();
                         }
                     }
                 });
@@ -134,7 +230,7 @@ public class SheetActivity extends AppCompatActivity implements ItemListAdapter.
                 final View layout = inflater.inflate(R.layout.add_discount_dialog, null);
                 final EditText discountText = (EditText) layout.findViewById(R.id.editText_add_discount_value);
                 discountText.setText(DISCOUNT_RATE.toString());
-                final AlertDialog discountDialog = new AlertDialog.Builder(SheetActivity.this).setTitle("Add Discount").setView(layout)
+                final AlertDialog discountDialog = new AlertDialog.Builder(NewSheetActivity.this).setTitle("Add Discount").setView(layout)
                         .setPositiveButton("Save", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -150,7 +246,6 @@ public class SheetActivity extends AppCompatActivity implements ItemListAdapter.
                     }
                 });
                 discountDialog.show();
-//                getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
                 discountDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -158,10 +253,9 @@ public class SheetActivity extends AppCompatActivity implements ItemListAdapter.
                         if (discount <= 100 && discount > 0) {
                             DB.addDiscount(Consts.DISCOUNT, discount, sid);
                             updateItemList();
-//                            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
                             discountDialog.dismiss();
                         } else {
-                            Toast.makeText(SheetActivity.this, "Discount value must < 100", Toast.LENGTH_LONG).show();
+                            Toast.makeText(NewSheetActivity.this, "Discount value must < 100", Toast.LENGTH_LONG).show();
                         }
                     }
                 });
@@ -188,15 +282,13 @@ public class SheetActivity extends AppCompatActivity implements ItemListAdapter.
                 final View layout = inflater.inflate(R.layout.add_discount_dialog, null);
                 final EditText discountText = (EditText) layout.findViewById(R.id.editText_add_discount_value);
                 discountText.setText(TIPS_RATE.toString());
-//                getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-                AlertDialog addTipDialog = new AlertDialog.Builder(SheetActivity.this).setTitle("Add Tips").setView(layout)
+                AlertDialog addTipDialog = new AlertDialog.Builder(NewSheetActivity.this).setTitle("Add Tips").setView(layout)
                         .setPositiveButton("Save", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 Integer tips = Integer.valueOf(((EditText) layout.findViewById(R.id.editText_add_discount_value)).getText().toString());
                                 DB.addDiscount(Consts.TIPS, tips, sid);
                                 updateItemList();
-//                                getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
                                 dialog.dismiss();
                             }
                         })
@@ -246,6 +338,7 @@ public class SheetActivity extends AppCompatActivity implements ItemListAdapter.
         TextView twd = (TextView) findViewById(R.id.textView_twd);
         jpd.setText(String.valueOf(finalJPD));
         twd.setText(String.valueOf(finalTWD));
+        sheetPrice = String.valueOf(finalJPD);
 
     }
 
@@ -259,28 +352,28 @@ public class SheetActivity extends AppCompatActivity implements ItemListAdapter.
         }
     }
 
-    private void save() {
-        new AlertDialog.Builder(this).setTitle("Save")
-                .setIcon(R.drawable.save)
-                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent it = new Intent(); // Your list's Intent
-                        it.setClass(SheetActivity.this, SheetActivity.class);
-                        it.setFlags(it.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY); // Adds the FLAG_ACTIVITY_NO_HISTORY flag
-                        startActivity(it);
-                        dialog.dismiss();
-                    }
-                })
-                .setNegativeButton("Cancel", null)
-                .show();
-    }
+//    private void save() {
+//        new AlertDialog.Builder(this).setTitle("Save")
+//                .setIcon(R.drawable.save)
+//                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        Intent it = new Intent(); // Your list's Intent
+//                        it.setClass(NewSheetActivity.this, NewSheetActivity.class);
+//                        it.setFlags(it.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY); // Adds the FLAG_ACTIVITY_NO_HISTORY flag
+//                        startActivity(it);
+//                        dialog.dismiss();
+//                    }
+//                })
+//                .setNegativeButton("Cancel", null)
+//                .show();
+//    }
 
-    private void cancel() {
+    private void deleteSheet() {
+        Log.d(TAG, "delete sheet:" + sid);
         DB.deleteItemsWithSheetID(sid);
         //DB.deleteImage(sid);
         DB.deleteSheet(sid);
-        finish();
     }
 
     @Override
@@ -292,7 +385,13 @@ public class SheetActivity extends AppCompatActivity implements ItemListAdapter.
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        cancel();
+        if (newSheet) {
+            deleteSheet();
+        }
+        Intent it = new Intent();
+        it.setClass(NewSheetActivity.this, MenuActivity.class);
+        it.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+        startActivity(it);
     }
 
     @Override

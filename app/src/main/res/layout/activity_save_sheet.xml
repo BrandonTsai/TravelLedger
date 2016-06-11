@@ -1,9 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@android:color/white"
-    android:padding="10dp">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="brandon.tsai.travelledger.SaveSheetActivity"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@android:color/background_light"
+        android:layout_gravity="center_vertical"
+        android:layout_marginBottom="2dp">
+
+        <Button
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:id="@+id/button_back"
+            android:background="@drawable/left2"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="5dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:id="@+id/textView3"
+            android:textColor="#1da865"
+            android:textSize="22dp"
+            android:textStyle="bold|normal|italic"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:layout_marginTop="3dp"
+            android:singleLine="true" />
+
+        <Button
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:id="@+id/button_save_sheet"
+            android:background="@drawable/save"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="5dp"
+            android:nestedScrollingEnabled="true" />
+
+    </LinearLayout>
+
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -23,8 +66,7 @@
             android:id="@+id/editText_sheet_name"
             android:layout_marginRight="5dp"
             android:layout_marginLeft="5dp"
-            android:selectAllOnFocus="true"
-            android:singleLine="true" />
+            android:selectAllOnFocus="true" />
     </LinearLayout>
 
     <LinearLayout
@@ -177,4 +219,5 @@
         </RadioGroup>
 
     </LinearLayout>
+
 </LinearLayout>

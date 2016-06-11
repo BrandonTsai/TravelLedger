@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="brandon.tsai.travelledger.SheetActivity"
+    tools:context=".NewSheetActivity"
     android:orientation="vertical">
     <LinearLayout
         android:orientation="horizontal"
@@ -16,33 +16,46 @@
         <Button
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:id="@+id/button_menu"
-            android:background="@drawable/menu96"
+            android:id="@+id/button_sheet_back"
+            android:background="@drawable/left2"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="5dp" />
+
+        <Button
+            android:layout_width="60dp"
+            android:layout_height="40dp"
+            android:id="@+id/button_cancel"
+            android:background="@android:color/white"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="5dp"
+            android:text="Cancel"
+            android:textColor="@android:color/darker_gray" />
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:background="@android:color/transparent"
-            android:text="New"
-            android:id="@+id/textView3"
-            android:textColor="#1da865"
+            android:id="@+id/textView_sheet_name"
+            android:textColor="#1b8753"
             android:textSize="22dp"
             android:textStyle="bold|normal|italic"
             android:layout_gravity="center"
-            android:gravity="center"
             android:layout_weight="1"
             android:layout_marginTop="3dp"
-            android:singleLine="true" />
+            android:singleLine="true"
+            android:gravity="center_vertical|center_horizontal"
+            android:paddingLeft="10dp"
+            android:text="New" />
 
         <Button
-            android:layout_width="40dp"
+            android:layout_width="50dp"
             android:layout_height="40dp"
-            android:id="@+id/button_save_sheet"
-            android:background="@drawable/save"
+            android:id="@+id/button_go_save_sheet"
+            android:background="@android:color/white"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="5dp" />
+            android:layout_marginLeft="5dp"
+            android:text="SAVE"
+            android:textColor="#1da865" />
 
     </LinearLayout>
 

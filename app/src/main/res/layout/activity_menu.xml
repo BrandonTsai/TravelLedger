@@ -20,7 +20,8 @@
             android:id="@+id/button_back"
             android:background="@drawable/left1"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="5dp" />
+            android:layout_marginLeft="5dp"
+            android:visibility="gone" />
 
         <TextView
             android:layout_width="match_parent"
@@ -32,8 +33,7 @@
             android:textSize="26dp"
             android:textStyle="bold|normal|italic"
             android:layout_gravity="center_horizontal"
-            android:gravity="center"
-            android:layout_marginRight="45dp" />
+            android:gravity="center" />
 
     </LinearLayout>
 
@@ -78,6 +78,34 @@
             android:paddingLeft="10dp"
             android:paddingTop="3dp"
             android:paddingBottom="3dp"
+            android:layout_marginTop="2dp" >
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:id="@+id/imageView5"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/chart48" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Statistics"
+                android:id="@+id/textView_statistics"
+                android:padding="10dp"
+                android:textColor="@color/abc_primary_text_material_light"
+                android:clickable="true"
+                android:textSize="22dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/background_light"
+            android:paddingLeft="10dp"
+            android:paddingTop="3dp"
+            android:paddingBottom="3dp"
             android:layout_marginTop="2dp"
             android:visibility="gone">
 
@@ -99,15 +127,30 @@
                 android:textSize="22dp" />
         </LinearLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/sheets"
-            android:id="@+id/textView2"
-            android:textColor="@color/secondary_text_default_material_light"
-            android:padding="10dp"
-            android:textSize="22dp"
-            android:textStyle="bold|italic" />
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sheets"
+                android:id="@+id/textView2"
+                android:textColor="@color/secondary_text_default_material_light"
+                android:padding="10dp"
+                android:textSize="22dp"
+                android:textStyle="bold|italic"
+                android:layout_weight="1" />
+
+            <Button
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:id="@+id/button_add_new_sheet"
+                android:background="@android:drawable/ic_input_add"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="10dp" />
+        </LinearLayout>
 
         <ListView
             android:layout_width="match_parent"

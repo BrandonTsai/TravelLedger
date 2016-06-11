@@ -31,7 +31,7 @@ public class ItemListAdapter extends CursorSwipeAdapter {
 
     private AdapterCallback callerActivity;
 
-    protected ItemListAdapter(Context context, Cursor c, int sheedId, boolean autoRequery, SheetActivity activity) {
+    protected ItemListAdapter(Context context, Cursor c, int sheedId, boolean autoRequery, NewSheetActivity activity) {
         super(context, c, autoRequery);
         this.sheetId = sheedId;
         callerActivity = activity;

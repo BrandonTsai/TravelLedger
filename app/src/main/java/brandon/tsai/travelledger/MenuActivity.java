@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
@@ -11,7 +12,7 @@ import android.widget.TextView;
 
 public class MenuActivity extends AppCompatActivity {
 
-    private static final String TAG="Menu";
+    private static final String TAG="(TL)Menu";
     private Context context;
     SheetListAdapter sheetListAdapter;
 
@@ -22,14 +23,16 @@ public class MenuActivity extends AppCompatActivity {
         context = this;
 
 
-
-
-        ((Button) findViewById(R.id.button_back)).setOnClickListener(new View.OnClickListener() {
+        ((Button) findViewById(R.id.button_add_new_sheet)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                Intent intent = new Intent();
+                intent.setClass(MenuActivity.this, NewSheetActivity.class);
+                startActivity(intent);
             }
         });
+
+
 
         ((TextView) findViewById(R.id.textView_setting)).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,8 +54,10 @@ public class MenuActivity extends AppCompatActivity {
     protected void onResume(){
         super.onResume();
         if (sheetListAdapter != null) {
+            Log.d(TAG, "update sheet list!");
             sheetListAdapter.changeCursor(DB.getSheets());
             sheetListAdapter.notifyDataSetChanged();
+            sheetListAdapter.closeAllItems();
         }
 
     }

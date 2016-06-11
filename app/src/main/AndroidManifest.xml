@@ -8,16 +8,23 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".MainActivity">
-        </activity>
-        <activity android:name=".SheetActivity">
+        <activity android:name=".MainActivity"
+            android:noHistory="true"></activity>
+        <activity android:name=".NewSheetActivity"
+            android:noHistory="true"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SettingActivity"></activity>
-        <activity android:name=".MenuActivity"></activity>
+        <activity android:name=".SettingActivity"
+            android:noHistory="true"/>
+        <activity android:name=".MenuActivity"
+            android:noHistory="true"
+            />
+        <activity android:name=".SaveSheetActivity"
+            android:noHistory="true"></activity>
     </application>
 
 </manifest>

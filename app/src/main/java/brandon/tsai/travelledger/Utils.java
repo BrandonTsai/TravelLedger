@@ -12,6 +12,12 @@ public class Utils {
     public static int booleanToInt(boolean flag){
         return (flag)? 1 : 0;
     }
+    public static boolean intToBoolean(int flag){
+        if (flag == 0) {
+            return false;
+        }
+        return true;
+    }
 
     public static String getCurrentDate(){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");

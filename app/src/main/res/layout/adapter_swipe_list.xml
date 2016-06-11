@@ -58,13 +58,13 @@
                 android:id="@+id/textView_sheet_name"
                 android:layout_gravity="center_vertical"
                 android:gravity="center_vertical"
-                android:textSize="22dp"
+                android:textSize="20dp"
                 android:background="@android:color/white"
                 android:clickable="true"
                 android:textColor="@android:color/black"
                 android:visibility="visible"
-                android:paddingTop="7dp"
-                android:paddingBottom="10dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
                 android:paddingLeft="8dp" />
         </LinearLayout>
     </com.daimajia.swipe.SwipeLayout>

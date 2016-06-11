@@ -1,5 +1,6 @@
 package brandon.tsai.travelledger;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -50,7 +51,10 @@ public class SettingActivity extends AppCompatActivity {
                 spEditor.putString("tips", tips);
                 spEditor.commit();
 
-                finish();
+                Intent it = new Intent();
+                it.setClass(SettingActivity.this, MenuActivity.class);
+                it.setFlags(it.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
+                startActivity(it);
             }
         });
     }
@@ -63,6 +67,15 @@ public class SettingActivity extends AppCompatActivity {
     @Override
     protected void onPause(){
         super.onPause();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent it = new Intent();
+        it.setClass(SettingActivity.this, MenuActivity.class);
+        it.setFlags(it.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
+        startActivity(it);
     }
 
 }

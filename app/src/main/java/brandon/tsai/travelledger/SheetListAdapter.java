@@ -47,7 +47,7 @@ public class SheetListAdapter extends CursorSwipeAdapter {
             public void onClick(View v) {
                 Log.d(TAG, "click sheet:" + sheetName);
                 Intent intent = new Intent();
-                intent.setClass(context, SheetActivity.class);
+                intent.setClass(context, NewSheetActivity.class);
                 intent.putExtra("sheetId", sheetId);
                 intent.putExtra("sheetName", sheetName);
                 context.startActivity(intent);
@@ -63,6 +63,7 @@ public class SheetListAdapter extends CursorSwipeAdapter {
                 Cursor newCursor = DB.getSheets();
                 changeCursor(newCursor);
                 notifyDataSetChanged();
+                closeAllItems();
             }
         });
 
@@ -87,6 +88,7 @@ public class SheetListAdapter extends CursorSwipeAdapter {
                                 Cursor newCursor = DB.getSheets();
                                 changeCursor(newCursor);
                                 notifyDataSetChanged();
+                                closeAllItems();
                             }
                         })
                         .setNegativeButton("Cancel", null).show();
@@ -101,6 +103,8 @@ public class SheetListAdapter extends CursorSwipeAdapter {
 
     @Override
     public void closeAllItems() {
-
+        for (int i = 0; i< DB.getSheets().getCount();i++){
+            closeItem(i);
+        }
     }
 }

@@ -42,6 +42,7 @@ public class DB {
                     + "name TEXT,"
                     + "date TEXT,"
                     + "type TEXT,"
+                    + "price TEXT,"
                     + "cash INTEGER"
                     + ");");
             db.execSQL("CREATE TABLE IF NOT EXISTS items ("
@@ -60,10 +61,12 @@ public class DB {
 
     // ---------------- Sheets ----------------------
 
-    public static int addSheets(String name, String date, boolean cashflag) {
-        ContentValues cv = new ContentValues(3);
+    public static int addSheets(String name, String date, String price, String type, boolean cashflag) {
+        ContentValues cv = new ContentValues(5);
         cv.put("name", name);
         cv.put("date", date);
+        cv.put("price", price);
+        cv.put("type", type);
         int cash = Utils.booleanToInt(cashflag);
         cv.put("cash", cash);
         long noteId = db.insert("sheets", null, cv);
@@ -72,8 +75,15 @@ public class DB {
     }
 
     public static Cursor getSheets() {
-        Cursor cursor = db.query("sheets", new String[]{"_id", "name", "date", "cash"}, null ,
+        Cursor cursor = db.query("sheets", new String[]{"_id", "name", "date", "cash", "price", "type"}, null,
                 null, null, null, null);
+        return cursor;
+    }
+
+    public static Cursor getSheetById(int sid) {
+        Cursor cursor = db.query("sheets", new String[]{"name", "date", "price", "type", "cash"}, "_id=" + sid ,
+                null, null, null, null);
+        cursor.moveToFirst();
         return cursor;
     }
 
@@ -83,11 +93,16 @@ public class DB {
         db.update("sheets", cv, "_id=" + tagId, null);
     }
 
-    public static void updateSheet(int tagId, String name, String date, boolean cashflag) {
-        ContentValues cv=new ContentValues(1);
+    public static void updateSheet(int sid, String name, String date, String price, String type, boolean cashflag) {
+        Log.d(TAG, "update "+ sid + "," + name);
+        ContentValues cv=new ContentValues(5);
         int cash = Utils.booleanToInt(cashflag);
+        cv.put("name",name);
+        cv.put("date",date);
+        cv.put("price",price);
+        cv.put("type",type);
         cv.put("cash", cash);
-        db.update("sheets", cv, "_id=" + tagId, null);
+        db.update("sheets", cv, "_id=" + sid, null);
     }
 
     public static void deleteSheet(int id) {
