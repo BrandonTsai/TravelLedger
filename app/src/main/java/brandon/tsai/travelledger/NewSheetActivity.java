@@ -223,9 +223,9 @@ public class NewSheetActivity extends AppCompatActivity implements ItemListAdapt
         });
 
         ImageView discountBtn = (ImageView) findViewById(R.id.image_discount);
-        discountBtn.setOnClickListener(new View.OnClickListener() {
+        discountBtn.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public void onClick(View v) {
+            public boolean onLongClick(View v) {
                 LayoutInflater inflater = getLayoutInflater();
                 final View layout = inflater.inflate(R.layout.add_discount_dialog, null);
                 final EditText discountText = (EditText) layout.findViewById(R.id.editText_add_discount_value);
@@ -259,6 +259,14 @@ public class NewSheetActivity extends AppCompatActivity implements ItemListAdapt
                         }
                     }
                 });
+                return false;
+            }
+        });
+        discountBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DB.addDiscount(Consts.DISCOUNT, DISCOUNT_RATE, sid);
+                updateItemList();
             }
         });
 
@@ -274,10 +282,9 @@ public class NewSheetActivity extends AppCompatActivity implements ItemListAdapt
         });
 
         final ImageView addTipsBtn = (ImageView) findViewById(R.id.image_add_tips);
-        addTipsBtn.setOnClickListener(new View.OnClickListener() {
+        addTipsBtn.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public void onClick(View v) {
-
+            public boolean onLongClick(View v) {
                 LayoutInflater inflater = getLayoutInflater();
                 final View layout = inflater.inflate(R.layout.add_discount_dialog, null);
                 final EditText discountText = (EditText) layout.findViewById(R.id.editText_add_discount_value);
@@ -301,6 +308,14 @@ public class NewSheetActivity extends AppCompatActivity implements ItemListAdapt
                     }
                 });
                 addTipDialog.show();
+                return false;
+            }
+        });
+        addTipsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DB.addDiscount(Consts.TIPS, TIPS_RATE, sid);
+                updateItemList();
             }
         });
     }
