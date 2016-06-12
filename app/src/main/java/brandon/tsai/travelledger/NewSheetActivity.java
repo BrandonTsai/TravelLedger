@@ -187,6 +187,8 @@ public class NewSheetActivity extends AppCompatActivity implements ItemListAdapt
             public void onClick(View v) {
                 LayoutInflater inflater = getLayoutInflater();
                 final View layout = inflater.inflate(R.layout.add_item_dialog, null);
+                final EditText priceView = (EditText) layout.findViewById(R.id.editText_add_dialog_price);
+                priceView.requestFocus();
                 RadioGroup rg = (RadioGroup) layout.findViewById(R.id.radioGroup);
                 rg.check(R.id.radioButton_include_tax);
                 final AlertDialog addItemDialog = new AlertDialog.Builder(NewSheetActivity.this).setTitle("Add Item").setView(layout)
@@ -197,6 +199,13 @@ public class NewSheetActivity extends AppCompatActivity implements ItemListAdapt
                             }
                         })
                         .setNegativeButton("Cancel", null).create();
+                addItemDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                    @Override
+                    public void onShow(DialogInterface dialog) {
+                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.showSoftInput(priceView, InputMethodManager.SHOW_IMPLICIT);
+                    }
+                });
                 addItemDialog.show();
                 addItemDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
                     @Override
